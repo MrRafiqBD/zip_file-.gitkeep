@@ -38,7 +38,9 @@ jobs:
         run: |
           sudo apt-get install -y lftp
           lftp -c "
-            set ftp:ssl-allow no;
+            set ftp:ssl-allow yes;
+            set ftp:ssl-force yes;
+            set ssl:verify-certificate no;
             open -u $FTP_USER,$FTP_PASS $FTP_HOST;
             mirror -R ./web/ $FTP_DIR;
             put pdf_database.db -o ${FTP_DIR}pdf_database.db;
