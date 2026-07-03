@@ -39,18 +39,7 @@ jobs:
           path: pdf_database.db
           retention-days: 30
 
-      - name: Deploy DB to cPanel
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          include: |
-            pdf_database.db
-
-      - name: Deploy Web Files
+      - name: Deploy to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -58,3 +47,9 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./web/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
+
+      - name: Upload DB via FTP
+        run: |
+          curl -T pdf_database.db \
+            ftp://${{ secrets.FTP_HOST }}${{ secrets.FTP_SERVER_DIR }}pdf_database.db \
+            --user ${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}
